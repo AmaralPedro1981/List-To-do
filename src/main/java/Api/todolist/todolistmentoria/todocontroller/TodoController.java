@@ -1,5 +1,6 @@
 package Api.todolist.todolistmentoria.todocontroller;
 
+import Api.todolist.todolistmentoria.dto.TarefaCriadaDTO;
 import Api.todolist.todolistmentoria.dto.TodoDto;
 import Api.todolist.todolistmentoria.todoservice.TodoService;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +28,7 @@ public class TodoController {
     TodoService todoService;
 
     @ApiOperation(value = "Criando uma nova tarefa")
-    @ApiResponses( value ={
+    @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Tarefa criada com sucesso"),
             @ApiResponse(code = 500, message = "Houve um erro ao criar a tarefa.")
 
@@ -35,14 +36,14 @@ public class TodoController {
 
     @PostMapping("/todos")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<TodoDto> createTodo(@RequestBody @Valid @Validated TodoDto todo) {
+    public ResponseEntity<TarefaCriadaDTO> createTodo(@RequestBody @Valid @Validated TarefaCriadaDTO todo) {
         log.info("Criando uma nova tarefa com as informações [{}]", todo);
         TodoDto createdTodo = todoService.createTodo(todo);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTodo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TarefaCriadaDTO(createdTodo));
     }
 
     @ApiOperation(value = "Listando todas as tarefas")
-    @ApiResponses( value ={
+    @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Tarefas listadas com sucesso"),
             @ApiResponse(code = 500, message = "Houve um erro ao listar as tarefas")
 
@@ -55,20 +56,20 @@ public class TodoController {
     }
 
     @ApiOperation(value = "Buscando uma tarefa pelo id")
-    @ApiResponses( value ={
+    @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Tarefa encontrada com sucesso"),
             @ApiResponse(code = 404, message = "Não foi encontrada nenhuma tarefa com esse id")
 
     })
     @GetMapping("/todos/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<TodoDto> getTodoById(@PathVariable (value = "id") Long id) {
+    public ResponseEntity<TodoDto> getTodoById(@PathVariable(value = "id") Long id) {
         log.info("Buscando tarefa com o id [{}]", id);
         return todoService.findTodoById(id);
     }
 
     @ApiOperation(value = "Atualizando uma tarefa")
-    @ApiResponses( value ={
+    @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Tarefa atualizada com sucesso"),
             @ApiResponse(code = 404, message = "Nao foi possivel atualizar a tarefa - tarefa nao encontrada")
 
@@ -76,21 +77,21 @@ public class TodoController {
     @PutMapping("/todos/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<TodoDto> updateTodoById(@PathVariable(value = "id") Long id, @RequestBody TodoDto todo) {
-        log.info("Atualizando a tarefa com id [{}] as novas informações são : [{}]",id, todo);
+        log.info("Atualizando a tarefa com id [{}] as novas informações são : [{}]", id, todo);
 
         return todoService.updateTodoById(todo, id);
     }
 
 
     @ApiOperation(value = "Excluindo uma tarefa")
-    @ApiResponses( value ={
+    @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Tarefa excluida com sucesso"),
             @ApiResponse(code = 404, message = "Nao foi possivel excluir a tarefa - tarefa nao encontrada")
 
     })
     @DeleteMapping("/todos/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Object> deleteTodoById(@PathVariable (value = "id") Long id) {
+    public ResponseEntity<Object> deleteTodoById(@PathVariable(value = "id") Long id) {
         log.info("Excluindo tarefas com o id [{}]", id);
         return todoService.deleteById(id);
     }

@@ -1,10 +1,9 @@
 package Api.todolist.todolistmentoria.dto;
 
-import Api.todolist.todolistmentoria.model.Status;
+import Api.todolist.todolistmentoria.enums.Status;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,11 +15,11 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-
+@NoArgsConstructor
 public class TodoDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
 
     @Column(nullable = false)
     @NotBlank(message = "Campo NOME DO CLIENTE, não deve ser nulo")
@@ -30,18 +29,16 @@ public class TodoDto {
     @NotBlank(message = "Campo NOME DA TAREFA, não deve ser nulo")
     private String nomeDaTarefa;
 
-    @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime concluidoEm;
-
 
     @Column(nullable = false)
     @NotBlank(message = "Campo DESCRIÇÃO DA TAREFA, não deve ser nulo")
     private String descricaoDaTarefa;
 
     @Column(nullable = false)
-    @NotNull(message = "Campo DATA DA CONCLUSÃO, não deve ser nulo")
-    private LocalDateTime dataDaConclusao;
+    @NotNull(message = "Campo EXPECTATIVA DE CONCLUSÃO, não deve ser nulo")
+    private LocalDateTime expectativaDeConclusao;
 
     @Column(nullable = false)
     @NotNull(message = "Campo STATUS, não deve ser nulo")
@@ -62,6 +59,16 @@ public class TodoDto {
     @UpdateTimestamp
     @Column(name = "atualizado_Em")
     private  LocalDateTime atualizadoEm;
+
+    public TodoDto(TarefaCriadaDTO createdTodo) {
+        this.nomeDoCliente = createdTodo.nomeDoCliente();
+        this.nomeDaTarefa = createdTodo.nomeDaTarefa();
+        this.descricaoDaTarefa = createdTodo.descricaoDaTarefa();
+        this.expectativaDeConclusao = createdTodo.expectativaDeConclusao();
+        this.status = createdTodo.status();
+        this.responsavelPelaTarefa = createdTodo.responsavelPelaTarefa();
+        this.solicitante = createdTodo.solicitante();
+    }
 
 
     }
