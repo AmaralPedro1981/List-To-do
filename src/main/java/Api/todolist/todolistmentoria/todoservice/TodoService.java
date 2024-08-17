@@ -38,15 +38,16 @@ public class TodoService {
                 .map(todoToUpdate -> {
 
 
-                    if (todo.getStatus() == Status.CONCLUIDO && todoToUpdate.getStatus() != Status.CONCLUIDO
-                            && todo.getConcluidoEm() != null) {
-                        todoToUpdate.setConcluidoEm(todo.getConcluidoEm());
-
-                    } else if (todo.getStatus() == Status.CONCLUIDO && todoToUpdate.getStatus() != Status.CONCLUIDO) {
-                        todoToUpdate.setConcluidoEm(LocalDateTime.now());
-                    } else {
+                    if (todo.getStatus() == Status.CONCLUIDO && todoToUpdate.getStatus() != Status.CONCLUIDO) {
+                        if (todo.getConcluidoEm() != null) {
+                            todoToUpdate.setConcluidoEm(todo.getConcluidoEm());
+                        } else {
+                            todoToUpdate.setConcluidoEm(LocalDateTime.now());
+                        }
+                    } else if (todo.getStatus() != Status.CONCLUIDO) {
                         todoToUpdate.setConcluidoEm(null);
                     }
+
 
 
                     todoToUpdate.setNomeDoCliente(todo.getNomeDoCliente());
@@ -56,6 +57,8 @@ public class TodoService {
                     todoToUpdate.setResponsavelPelaTarefa(todo.getResponsavelPelaTarefa());
                     todoToUpdate.setSolicitante(todo.getSolicitante());
                     todoToUpdate.setNomeDaTarefa(todo.getNomeDaTarefa());
+
+
                     TodoDto updated = todoRepository.save(todoToUpdate);
 
 
